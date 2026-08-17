@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Sintonia</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="game">
+
+        <!-- ========================= -->
+        <!-- CABEÇALHO                 -->
+        <!-- ========================= -->
+
+        <header class="game-header">
+
+            <div>
+                <span class="eyebrow">JOGO DE OPINIÃO</span>
+                <h1>Sintonia</h1>
+            </div>
+
+            <div class="score-box">
+                <span>PONTOS</span>
+                <strong id="score">0</strong>
+            </div>
+
+        </header>
+
+
+        <!-- ========================= -->
+        <!-- PRÉ-JOGO                   -->
+        <!-- ========================= -->
+
+        <section
+            id="pre-game-screen"
+            class="screen"
+        >
+
+            <div class="intro">
+
+                <span class="step-label">NOVO JOGO</span>
+
+                <h2>Escolha o tema</h2>
+
+                <p>
+                    Defina os dois extremos que serão usados
+                    durante todas as rodadas.
+                </p>
+
+            </div>
+
+
+            <div class="setup-form">
+
+                <div class="input-group">
+
+                    <label for="left-input">
+                        Extremo esquerdo
+                    </label>
+
+                    <input
+                        id="left-input"
+                        type="text"
+                        placeholder="Ex.: Filme ruim"
+                        maxlength="30"
+                    >
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="right-input">
+                        Extremo direito
+                    </label>
+
+                    <input
+                        id="right-input"
+                        type="text"
+                        placeholder="Ex.: Filme bom"
+                        maxlength="30"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="theme-preview">
+
+                <span id="preview-left">
+                    Extremo esquerdo
+                </span>
+
+                <div class="preview-line"></div>
+
+                <span id="preview-right">
+                    Extremo direito
+                </span>
+
+            </div>
+
+
+            <button
+                id="start-game-button"
+                class="primary-button"
+            >
+                Começar jogo
+            </button>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- ETAPA 1                   -->
+        <!-- ========================= -->
+
+        <section
+            id="setup-screen"
+            class="screen hidden"
+        >
+
+            <div class="round-header">
+
+                <div>
+                    <span class="step-label">ETAPA 1</span>
+
+                    <h2>
+                        Pense em uma resposta
+                    </h2>
+                </div>
+
+                <span
+                    id="round-number"
+                    class="round-number"
+                >
+                    RODADA 1
+                </span>
+
+            </div>
+
+
+            <!-- TEMA -->
+
+            <div class="theme-display">
+
+                <span id="game-left-label">
+                    Filme ruim
+                </span>
+
+                <span>×</span>
+
+                <span id="game-right-label">
+                    Filme bom
+                </span>
+
+            </div>
+
+
+            <!-- ESCALA -->
+
+            <div class="scale-section">
+
+                <div class="scale-labels">
+
+                    <span id="target-left-label">
+                        Filme ruim
+                    </span>
+
+                    <span id="target-right-label">
+                        Filme bom
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="target-scale"
+                    class="scale"
+                >
+
+                    <div class="scale-line"></div>
+
+                    <div class="scale-mark mark-0"></div>
+                    <div class="scale-mark mark-25"></div>
+                    <div class="scale-mark mark-50"></div>
+                    <div class="scale-mark mark-75"></div>
+                    <div class="scale-mark mark-100"></div>
+
+
+                    <!-- Ponteiro sempre existe -->
+
+                    <div
+                        id="target-pointer"
+                        class="target-pointer"
+                    >
+
+                        <div class="target-line"></div>
+
+                        <div class="target-dot"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- POSIÇÃO -->
+
+            <div class="position-display">
+
+                <span>POSIÇÃO SORTEADA</span>
+
+                <strong id="target-number">—</strong>
+
+            </div>
+
+
+            <!-- BOTÃO DE GIRAR -->
+
+            <button
+                id="draw-button"
+                class="primary-button"
+            >
+                Girar roleta
+            </button>
+
+
+            <!-- RESPOSTA -->
+
+            <div class="answer-area">
+
+                <div class="input-group">
+
+                    <label for="answer-input">
+                        Sua resposta
+                    </label>
+
+                    <input
+                        id="answer-input"
+                        type="text"
+                        placeholder="Ex.: Interestelar"
+                        maxlength="60"
+                        disabled
+                    >
+
+                </div>
+
+
+                <button
+                    id="ready-button"
+                    class="primary-button"
+                    disabled
+                >
+                    Pronto
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- ETAPA 2                   -->
+        <!-- ========================= -->
+
+        <section
+            id="guess-screen"
+            class="screen hidden"
+        >
+
+            <div class="round-header">
+
+                <div>
+
+                    <span class="step-label">
+                        ETAPA 2
+                    </span>
+
+                    <h2>
+                        Onde essa resposta se encaixa?
+                    </h2>
+
+                </div>
+
+                <span
+                    id="guess-round-number"
+                    class="round-number"
+                >
+                    RODADA 1
+                </span>
+
+            </div>
+
+
+            <div class="theme-display">
+
+                <span id="guess-left-label">
+                    Filme ruim
+                </span>
+
+                <span>×</span>
+
+                <span id="guess-right-label">
+                    Filme bom
+                </span>
+
+            </div>
+
+
+            <div class="answer-card">
+
+                <span>RESPOSTA</span>
+
+                <h2 id="answer-display">
+                    Interestelar
+                </h2>
+
+            </div>
+
+
+            <p class="instruction">
+                Arraste o ponteiro para o lugar que você
+                acha que corresponde à resposta.
+            </p>
+
+
+            <div class="scale-section">
+
+                <div class="scale-labels">
+
+                    <span id="guess-scale-left">
+                        Filme ruim
+                    </span>
+
+                    <span id="guess-scale-right">
+                        Filme bom
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="guess-scale"
+                    class="scale guess-scale"
+                >
+
+                    <div class="scale-line"></div>
+
+                    <div class="scale-mark mark-0"></div>
+                    <div class="scale-mark mark-25"></div>
+                    <div class="scale-mark mark-50"></div>
+                    <div class="scale-mark mark-75"></div>
+                    <div class="scale-mark mark-100"></div>
+
+
+                    <button
+                        id="guess-pointer"
+                        class="guess-pointer"
+                    >
+                        ◆
+                    </button>
+
+                </div>
+
+
+                <div class="position-display">
+
+                    <span>SUA POSIÇÃO</span>
+
+                    <strong id="guess-number">
+                        50
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="confirm-button"
+                class="primary-button"
+            >
+                Confirmar palpite
+            </button>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- ETAPA 3                   -->
+        <!-- ========================= -->
+
+        <section
+            id="result-screen"
+            class="screen hidden"
+        >
+
+            <div class="round-header">
+
+                <div>
+
+                    <span class="step-label">
+                        ETAPA 3
+                    </span>
+
+                    <h2>Resultado</h2>
+
+                </div>
+
+                <span
+                    id="result-round-number"
+                    class="round-number"
+                >
+                    RODADA 1
+                </span>
+
+            </div>
+
+
+            <p
+                id="result-message"
+                class="result-message"
+            >
+                Vocês estavam em sintonia!
+            </p>
+
+
+            <div class="theme-display">
+
+                <span id="result-left-label">
+                    Filme ruim
+                </span>
+
+                <span>×</span>
+
+                <span id="result-right-label">
+                    Filme bom
+                </span>
+
+            </div>
+
+
+            <div class="scale-section">
+
+                <div class="scale-labels">
+
+                    <span id="result-scale-left">
+                        Filme ruim
+                    </span>
+
+                    <span id="result-scale-right">
+                        Filme bom
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="result-scale"
+                    class="scale result-scale"
+                >
+
+                    <div class="scale-line"></div>
+
+
+                    <div
+                        id="result-target"
+                        class="result-marker target-marker"
+                    >
+
+                        <span>ALVO</span>
+
+                        <div></div>
+
+                    </div>
+
+
+                    <div
+                        id="result-guess"
+                        class="result-marker guess-marker"
+                    >
+
+                        <span>PALPITE</span>
+
+                        <div></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="result-answer">
+
+                <span>RESPOSTA</span>
+
+                <strong id="result-answer">
+                    Interestelar
+                </strong>
+
+            </div>
+
+
+            <div class="result-card">
+
+                <span class="result-title">
+                    VOCÊS FIZERAM
+                </span>
+
+                <div class="points">
+
+                    <strong id="points-earned">
+                        0
+                    </strong>
+
+                    <span>pontos</span>
+
+                </div>
+
+                <p>
+                    Diferença:
+                    <strong id="distance">0</strong>
+                </p>
+
+            </div>
+
+
+            <div class="result-actions">
+
+                <button
+                    id="next-round-button"
+                    class="primary-button"
+                >
+                    Nova rodada
+                </button>
+
+                <button
+                    id="new-game-button"
+                    class="secondary-button"
+                >
+                    Novo jogo
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
