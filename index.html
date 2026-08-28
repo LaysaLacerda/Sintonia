@@ -19,7 +19,7 @@
     <main class="game">
 
         <!-- ========================= -->
-        <!-- CABEÇALHO                 -->
+        <!-- HEADER -->
         <!-- ========================= -->
 
         <header class="game-header">
@@ -38,7 +38,7 @@
 
 
         <!-- ========================= -->
-        <!-- PRÉ-JOGO                   -->
+        <!-- PRÉ-JOGO -->
         <!-- ========================= -->
 
         <section
@@ -122,7 +122,7 @@
 
 
         <!-- ========================= -->
-        <!-- ETAPA 1                   -->
+        <!-- ETAPA 1 -->
         <!-- ========================= -->
 
         <section
@@ -133,11 +133,15 @@
             <div class="round-header">
 
                 <div>
-                    <span class="step-label">ETAPA 1</span>
+
+                    <span class="step-label">
+                        ETAPA 1
+                    </span>
 
                     <h2>
                         Pense em uma resposta
                     </h2>
+
                 </div>
 
                 <span
@@ -149,8 +153,6 @@
 
             </div>
 
-
-            <!-- TEMA -->
 
             <div class="theme-display">
 
@@ -167,11 +169,11 @@
             </div>
 
 
-            <!-- ESCALA -->
+            <!-- ROLETA -->
 
-            <div class="scale-section">
+            <div class="roulette-section">
 
-                <div class="scale-labels">
+                <div class="roulette-labels">
 
                     <span id="target-left-label">
                         Filme ruim
@@ -185,29 +187,21 @@
 
 
                 <div
-                    id="target-scale"
-                    class="scale"
+                    id="target-roulette"
+                    class="roulette"
                 >
 
-                    <div class="scale-line"></div>
+                    <div class="roulette-arc"></div>
 
-                    <div class="scale-mark mark-0"></div>
-                    <div class="scale-mark mark-25"></div>
-                    <div class="scale-mark mark-50"></div>
-                    <div class="scale-mark mark-75"></div>
-                    <div class="scale-mark mark-100"></div>
-
-
-                    <!-- Ponteiro sempre existe -->
 
                     <div
                         id="target-pointer"
-                        class="target-pointer"
+                        class="roulette-pointer"
                     >
 
-                        <div class="target-line"></div>
+                        <div class="pointer-line"></div>
 
-                        <div class="target-dot"></div>
+                        <div class="pointer-dot"></div>
 
                     </div>
 
@@ -216,19 +210,6 @@
             </div>
 
 
-            <!-- POSIÇÃO -->
-
-            <div class="position-display">
-
-                <span>POSIÇÃO SORTEADA</span>
-
-                <strong id="target-number">—</strong>
-
-            </div>
-
-
-            <!-- BOTÃO DE GIRAR -->
-
             <button
                 id="draw-button"
                 class="primary-button"
@@ -236,8 +217,6 @@
                 Girar roleta
             </button>
 
-
-            <!-- RESPOSTA -->
 
             <div class="answer-area">
 
@@ -272,7 +251,7 @@
 
 
         <!-- ========================= -->
-        <!-- ETAPA 2                   -->
+        <!-- ETAPA 2 -->
         <!-- ========================= -->
 
         <section
@@ -336,9 +315,9 @@
             </p>
 
 
-            <div class="scale-section">
+            <div class="roulette-section">
 
-                <div class="scale-labels">
+                <div class="roulette-labels">
 
                     <span id="guess-scale-left">
                         Filme ruim
@@ -353,16 +332,10 @@
 
                 <div
                     id="guess-scale"
-                    class="scale guess-scale"
+                    class="roulette guess-roulette"
                 >
 
-                    <div class="scale-line"></div>
-
-                    <div class="scale-mark mark-0"></div>
-                    <div class="scale-mark mark-25"></div>
-                    <div class="scale-mark mark-50"></div>
-                    <div class="scale-mark mark-75"></div>
-                    <div class="scale-mark mark-100"></div>
+                    <div class="roulette-arc"></div>
 
 
                     <button
@@ -371,17 +344,6 @@
                     >
                         ◆
                     </button>
-
-                </div>
-
-
-                <div class="position-display">
-
-                    <span>SUA POSIÇÃO</span>
-
-                    <strong id="guess-number">
-                        50
-                    </strong>
 
                 </div>
 
@@ -399,7 +361,7 @@
 
 
         <!-- ========================= -->
-        <!-- ETAPA 3                   -->
+        <!-- ETAPA 3 -->
         <!-- ========================= -->
 
         <section
@@ -452,9 +414,11 @@
             </div>
 
 
-            <div class="scale-section">
+            <!-- ROLETA DO RESULTADO -->
 
-                <div class="scale-labels">
+            <div class="roulette-section">
+
+                <div class="roulette-labels">
 
                     <span id="result-scale-left">
                         Filme ruim
@@ -469,11 +433,24 @@
 
                 <div
                     id="result-scale"
-                    class="scale result-scale"
+                    class="roulette result-roulette"
                 >
 
-                    <div class="scale-line"></div>
+                    <div class="roulette-arc"></div>
 
+
+                    <!-- ÁREAS DE PONTUAÇÃO -->
+
+                    <svg
+                        id="scoring-svg"
+                        class="scoring-svg"
+                        viewBox="0 0 600 300"
+                        preserveAspectRatio="none"
+                    >
+                    </svg>
+
+
+                    <!-- ALVO -->
 
                     <div
                         id="result-target"
@@ -486,6 +463,8 @@
 
                     </div>
 
+
+                    <!-- PALPITE -->
 
                     <div
                         id="result-guess"
@@ -531,8 +510,8 @@
                 </div>
 
                 <p>
-                    Diferença:
-                    <strong id="distance">0</strong>
+                    Quanto mais perto do alvo,
+                    maior a pontuação.
                 </p>
 
             </div>

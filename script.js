@@ -2,6 +2,8 @@
 /* ELEMENTOS                         */
 /* ================================= */
 
+// Telas
+
 const preGameScreen =
     document.getElementById("pre-game-screen");
 
@@ -41,9 +43,6 @@ const drawButton =
 const targetPointer =
     document.getElementById("target-pointer");
 
-const targetNumber =
-    document.getElementById("target-number");
-
 const answerInput =
     document.getElementById("answer-input");
 
@@ -62,14 +61,14 @@ const guessScale =
 const guessPointer =
     document.getElementById("guess-pointer");
 
-const guessNumber =
-    document.getElementById("guess-number");
-
 const confirmButton =
     document.getElementById("confirm-button");
 
 
 // Resultado
+
+const scoringSvg =
+    document.getElementById("scoring-svg");
 
 const resultTarget =
     document.getElementById("result-target");
@@ -85,9 +84,6 @@ const resultMessage =
 
 const pointsEarned =
     document.getElementById("points-earned");
-
-const distanceElement =
-    document.getElementById("distance");
 
 const nextRoundButton =
     document.getElementById("next-round-button");
@@ -111,7 +107,6 @@ let gameTheme = {
     right: ""
 };
 
-
 let targetPosition = 50;
 
 let guessPosition = 50;
@@ -123,6 +118,22 @@ let score = 0;
 let round = 0;
 
 let isDragging = false;
+
+
+/* ================================= */
+/* POSIÇÃO → ÂNGULO                  */
+/* ================================= */
+
+function positionToAngle(position) {
+
+    /*
+     * 0   = esquerda = -90°
+     * 50  = centro   =   0°
+     * 100 = direita  = +90°
+     */
+
+    return -90 + (position * 1.8);
+}
 
 
 /* ================================= */
@@ -198,9 +209,7 @@ function startNewGame() {
 
     updateThemeLabels();
 
-
     prepareRound();
-
 
     showScreen(setupScreen);
 }
@@ -212,82 +221,66 @@ function startNewGame() {
 
 function updateThemeLabels() {
 
-    // Etapa 1
+    const ids = {
 
-    document.getElementById(
-        "game-left-label"
-    ).textContent = gameTheme.left;
+        "game-left-label":
+            gameTheme.left,
 
+        "target-left-label":
+            gameTheme.left,
 
-    document.getElementById(
-        "game-right-label"
-    ).textContent = gameTheme.right;
+        "guess-left-label":
+            gameTheme.left,
 
+        "guess-scale-left":
+            gameTheme.left,
 
-    document.getElementById(
-        "target-left-label"
-    ).textContent = gameTheme.left;
+        "result-left-label":
+            gameTheme.left,
 
+        "result-scale-left":
+            gameTheme.left,
 
-    document.getElementById(
-        "target-right-label"
-    ).textContent = gameTheme.right;
+        "game-right-label":
+            gameTheme.right,
 
+        "target-right-label":
+            gameTheme.right,
 
-    // Etapa 2
+        "guess-right-label":
+            gameTheme.right,
 
-    document.getElementById(
-        "guess-left-label"
-    ).textContent = gameTheme.left;
+        "guess-scale-right":
+            gameTheme.right,
 
+        "result-right-label":
+            gameTheme.right,
 
-    document.getElementById(
-        "guess-right-label"
-    ).textContent = gameTheme.right;
-
-
-    document.getElementById(
-        "guess-scale-left"
-    ).textContent = gameTheme.left;
-
-
-    document.getElementById(
-        "guess-scale-right"
-    ).textContent = gameTheme.right;
+        "result-scale-right":
+            gameTheme.right
+    };
 
 
-    // Resultado
+    Object.entries(ids).forEach(
+        ([id, value]) => {
 
-    document.getElementById(
-        "result-left-label"
-    ).textContent = gameTheme.left;
+            const element =
+                document.getElementById(id);
 
+            if (element) {
+                element.textContent = value;
+            }
 
-    document.getElementById(
-        "result-right-label"
-    ).textContent = gameTheme.right;
-
-
-    document.getElementById(
-        "result-scale-left"
-    ).textContent = gameTheme.left;
-
-
-    document.getElementById(
-        "result-scale-right"
-    ).textContent = gameTheme.right;
+        }
+    );
 }
 
 
 /* ================================= */
-/* PREPARAR NOVA RODADA              */
+/* PREPARAR RODADA                   */
 /* ================================= */
 
 function prepareRound() {
-
-    /*
-     * Atualiza os números das rodadas.
-     */
 
     document.getElementById(
         "round-number"
@@ -307,10 +300,6 @@ function prepareRound() {
         `RODADA ${round}`;
 
 
-    /*
-     * Reseta o estado da rodada.
-     */
-
     targetPosition = 50;
 
     guessPosition = 50;
@@ -318,53 +307,50 @@ function prepareRound() {
     currentAnswer = "";
 
 
-    /*
-     * Ponteiro volta para o centro.
-     */
+    /* ============================= */
+    /* PONTEIRO ETAPA 1              */
+    /* ============================= */
 
-    targetPointer.style.left = "50%";
+    targetPointer.style.transition =
+        "none";
 
-
-    /*
-     * Número volta a ficar vazio.
-     */
-
-    targetNumber.textContent = "—";
+    targetPointer.style.transform =
+        "translateX(-50%) rotate(0deg)";
 
 
-    /*
-     * Campo de resposta é resetado.
-     *
-     * IMPORTANTE:
-     * Ele continua visível, mas desabilitado.
-     */
+    targetPointer.offsetHeight;
+
+
+    targetPointer.style.transition =
+        "transform 1.1s cubic-bezier(.12,.7,.15,1)";
+
+
+    /* ============================= */
+    /* RESPOSTA                       */
+    /* ============================= */
 
     answerInput.value = "";
 
     answerInput.disabled = true;
 
-
-    /*
-     * Botão "Pronto" também fica
-     * desabilitado até a roleta girar
-     * e uma resposta ser digitada.
-     */
-
     readyButton.disabled = true;
 
 
-    /*
-     * E AQUI ESTÁ A CORREÇÃO DO BUG
-     * DA SEGUNDA RODADA:
-     *
-     * o botão precisa voltar a estar
-     * habilitado.
-     */
+    /* ============================= */
+    /* ROLETA                         */
+    /* ============================= */
 
     drawButton.disabled = false;
 
     drawButton.textContent =
         "Girar roleta";
+
+
+    /* ============================= */
+    /* PALPITE                        */
+    /* ============================= */
+
+    setGuessPosition(50);
 }
 
 
@@ -380,16 +366,13 @@ drawButton.addEventListener(
 
 function drawTarget() {
 
-    /*
-     * Evita clicar duas vezes enquanto
-     * a animação está acontecendo.
-     */
-
     drawButton.disabled = true;
 
 
     /*
-     * Sorteia uma posição de 0 a 100.
+     * Sorteia somente o valor lógico.
+     *
+     * Ele nunca aparece para o jogador.
      */
 
     targetPosition =
@@ -398,64 +381,65 @@ function drawTarget() {
         );
 
 
-    /*
-     * Move o ponteiro.
-     *
-     * A animação está no CSS.
-     */
-
-    targetPointer.style.left =
-        `${targetPosition}%`;
+    const finalAngle =
+        positionToAngle(
+            targetPosition
+        );
 
 
-    /*
-     * Mostra o número sorteado.
-     */
-
-    targetNumber.textContent =
-        targetPosition;
+    const spins = 4;
 
 
-    /*
-     * Libera a resposta.
-
-     */
-
-    answerInput.disabled = false;
+    const animatedAngle =
+        (360 * spins) +
+        finalAngle;
 
 
-    answerInput.focus();
+    targetPointer.style.transform =
+        `translateX(-50%) rotate(${animatedAngle}deg)`;
 
 
-    /*
-     * O botão Pronto só será
-     * liberado quando houver texto.
-     */
+    setTimeout(() => {
 
-    readyButton.disabled = true;
+        targetPointer.style.transition =
+            "none";
+
+
+        targetPointer.style.transform =
+            `translateX(-50%) rotate(${finalAngle}deg)`;
+
+
+        targetPointer.offsetHeight;
+
+
+        targetPointer.style.transition =
+            "transform 1.1s cubic-bezier(.12,.7,.15,1)";
+
+
+        answerInput.disabled = false;
+
+        answerInput.focus();
+
+    }, 1150);
 }
 
 
 /* ================================= */
-/* LIBERAR BOTÃO PRONTO              */
+/* RESPOSTA                          */
 /* ================================= */
 
 answerInput.addEventListener(
     "input",
     function () {
 
-        const hasAnswer =
-            answerInput.value.trim().length > 0;
-
-
         readyButton.disabled =
-            !hasAnswer;
+            answerInput.value.trim().length === 0;
     }
 );
 
 
 /* ================================= */
-/* PRONTO → ETAPA 2                  */
+/* PRONTO                            */
 /* ================================= */
 
 readyButton.addEventListener(
@@ -482,11 +466,6 @@ function finishAnswer() {
         currentAnswer;
 
 
-    /*
-     * O segundo jogador começa
-     * no meio da escala.
-     */
-
     setGuessPosition(50);
 
 
@@ -495,31 +474,39 @@ function finishAnswer() {
 
 
 /* ================================= */
-/* POSIÇÃO DO PALPITE                */
+/* DEFINIR POSIÇÃO DO PALPITE        */
 /* ================================= */
 
 function setGuessPosition(position) {
 
-    position = Math.max(
-        0,
-        Math.min(100, position)
-    );
+    /*
+     * LIMITADOR ABSOLUTO.
+     *
+     * A posição lógica nunca pode
+     * sair de 0 até 100.
+     */
+
+    position =
+        Math.max(
+            0,
+            Math.min(100, position)
+        );
 
 
     guessPosition = position;
 
 
-    guessPointer.style.left =
-        `${position}%`;
+    const angle =
+        positionToAngle(position);
 
 
-    guessNumber.textContent =
-        Math.round(position);
+    guessPointer.style.transform =
+        `translateX(-50%) rotate(${angle}deg)`;
 }
 
 
 /* ================================= */
-/* DRAG DO PALPITE                   */
+/* INICIAR ARRASTE                   */
 /* ================================= */
 
 guessPointer.addEventListener(
@@ -534,14 +521,19 @@ function startDrag(event) {
 
     isDragging = true;
 
+
     guessPointer.setPointerCapture(
         event.pointerId
     );
 
 
-    movePointer(event);
+    updatePointerFromMouse(event);
 }
 
+
+/* ================================= */
+/* ARRASTAR                          */
+/* ================================= */
 
 guessPointer.addEventListener(
     "pointermove",
@@ -556,9 +548,13 @@ function moveDrag(event) {
     }
 
 
-    movePointer(event);
+    updatePointerFromMouse(event);
 }
 
+
+/* ================================= */
+/* FINALIZAR ARRASTE                 */
+/* ================================= */
 
 guessPointer.addEventListener(
     "pointerup",
@@ -572,34 +568,142 @@ guessPointer.addEventListener(
 );
 
 
-function stopDrag() {
+function stopDrag(event) {
 
     isDragging = false;
+
+
+    try {
+
+        guessPointer.releasePointerCapture(
+            event.pointerId
+        );
+
+    } catch (error) {
+
+        // Ignora caso a captura já tenha sido liberada.
+
+    }
 }
 
 
 /* ================================= */
-/* CALCULAR POSIÇÃO DO MOUSE         */
+/* CALCULAR POSIÇÃO DO MOUSE        */
 /* ================================= */
 
-function movePointer(event) {
+function updatePointerFromMouse(event) {
 
     const rect =
         guessScale.getBoundingClientRect();
 
 
-    const x =
-        event.clientX - rect.left;
+    /*
+     * ==========================================
+     * CENTRO REAL DA ROLETA
+     * ==========================================
+     *
+     * O arco é um semicírculo cujo centro
+     * está exatamente no meio da largura
+     * e na parte inferior.
+     */
+
+    const centerX =
+        rect.left +
+        rect.width / 2;
 
 
-    let position =
-        (x / rect.width) * 100;
+    const centerY =
+        rect.bottom;
 
 
-    position = Math.max(
-        0,
-        Math.min(100, position)
-    );
+    /*
+     * Distância do mouse até o centro.
+     */
+
+    const dx =
+        event.clientX -
+        centerX;
+
+
+    const dy =
+        centerY -
+        event.clientY;
+
+
+    /*
+     * ==========================================
+     * ÂNGULO
+     * ==========================================
+     *
+     * atan2 normalmente dá:
+     *
+     * direita  = 0°
+     * cima     = 90°
+     * esquerda = 180°
+     * baixo    = -90°
+     */
+
+    let angle =
+        Math.atan2(dy, dx) *
+        180 /
+        Math.PI;
+
+
+    /*
+     * ==========================================
+     * TRAVA NO SEMICÍRCULO SUPERIOR
+     * ==========================================
+     *
+     * O intervalo permitido é:
+     *
+     * 0° → direita
+     * 90° → cima
+     * 180° → esquerda
+     *
+     * Qualquer ângulo abaixo do eixo
+     * horizontal é imediatamente jogado
+     * para um dos extremos.
+     */
+
+    if (angle < 0) {
+
+        /*
+         * Mouse abaixo do centro.
+         *
+         * Escolhemos o extremo mais próximo.
+         */
+
+        if (dx >= 0) {
+            angle = 0;
+        } else {
+            angle = 180;
+        }
+    }
+
+
+    /*
+     * Segurança adicional.
+     */
+
+    angle =
+        Math.max(
+            0,
+            Math.min(180, angle)
+        );
+
+
+    /*
+     * ==========================================
+     * ÂNGULO MATEMÁTICO → POSIÇÃO DO JOGO
+     * ==========================================
+     *
+     * 180° = esquerda = 0
+     *  90° = centro   = 50
+     *   0° = direita  = 100
+     */
+
+    const position =
+        ((180 - angle) / 180) * 100;
 
 
     setGuessPosition(position);
@@ -638,17 +742,24 @@ function confirmGuess() {
         score;
 
 
-    /*
-     * Posiciona os dois ponteiros
-     * na tela de resultado.
-     */
-
-    resultTarget.style.left =
-        `${targetPosition}%`;
+    const targetAngle =
+        positionToAngle(
+            targetPosition
+        );
 
 
-    resultGuess.style.left =
-        `${guessPosition}%`;
+    const guessAngle =
+        positionToAngle(
+            guessPosition
+        );
+
+
+    resultTarget.style.transform =
+        `translateX(-50%) rotate(${targetAngle}deg)`;
+
+
+    resultGuess.style.transform =
+        `translateX(-50%) rotate(${guessAngle}deg)`;
 
 
     resultAnswer.textContent =
@@ -659,15 +770,189 @@ function confirmGuess() {
         points;
 
 
-    distanceElement.textContent =
-        distance;
-
-
     resultMessage.textContent =
         getResultMessage(distance);
 
 
+    createScoringZones(
+        targetPosition
+    );
+
+
     showScreen(resultScreen);
+}
+
+
+/* ================================= */
+/* ÁREAS DE PONTUAÇÃO                */
+/* ================================= */
+
+function createScoringZones(target) {
+
+    scoringSvg.innerHTML = "";
+
+
+    createScoreSector(
+        target - 15,
+        target + 15,
+        "score-one"
+    );
+
+
+    createScoreSector(
+        target - 8,
+        target + 8,
+        "score-two"
+    );
+
+
+    createScoreSector(
+        target - 3,
+        target + 3,
+        "score-three"
+    );
+}
+
+
+/* ================================= */
+/* CRIAR SETOR SVG                   */
+/* ================================= */
+
+function createScoreSector(
+    startPosition,
+    endPosition,
+    className
+) {
+
+    startPosition =
+        Math.max(
+            0,
+            startPosition
+        );
+
+
+    endPosition =
+        Math.min(
+            100,
+            endPosition
+        );
+
+
+    if (startPosition >= endPosition) {
+        return;
+    }
+
+
+    const cx = 300;
+
+    const cy = 300;
+
+    const radius = 250;
+
+
+    const startAngle =
+        180 -
+        (startPosition * 1.8);
+
+
+    const endAngle =
+        180 -
+        (endPosition * 1.8);
+
+
+    const start =
+        polarToCartesian(
+            cx,
+            cy,
+            radius,
+            startAngle
+        );
+
+
+    const end =
+        polarToCartesian(
+            cx,
+            cy,
+            radius,
+            endAngle
+        );
+
+
+    const largeArcFlag =
+        Math.abs(
+            endAngle -
+            startAngle
+        ) <= 180
+            ? "0"
+            : "1";
+
+
+    const pathData = [
+
+        `M ${cx} ${cy}`,
+
+        `L ${start.x} ${start.y}`,
+
+        `A ${radius} ${radius} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`,
+
+        "Z"
+
+    ].join(" ");
+
+
+    const path =
+        document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path"
+        );
+
+
+    path.setAttribute(
+        "d",
+        pathData
+    );
+
+
+    path.setAttribute(
+        "class",
+        className
+    );
+
+
+    scoringSvg.appendChild(path);
+}
+
+
+/* ================================= */
+/* POLAR → CARTESIAN                 */
+/* ================================= */
+
+function polarToCartesian(
+    centerX,
+    centerY,
+    radius,
+    angleInDegrees
+) {
+
+    const angleInRadians =
+        angleInDegrees *
+        Math.PI /
+        180;
+
+
+    return {
+
+        x:
+            centerX +
+            radius *
+            Math.cos(angleInRadians),
+
+        y:
+            centerY -
+            radius *
+            Math.sin(angleInRadians)
+
+    };
 }
 
 
@@ -743,23 +1028,14 @@ nextRoundButton.addEventListener(
 function startNextRound() {
 
     /*
-     * O tema NÃO é alterado.
+     * O tema continua o mesmo.
      */
 
     round++;
 
 
-    /*
-     * Reseta somente os dados
-     * da rodada.
-     */
-
     prepareRound();
 
-
-    /*
-     * Volta para a Etapa 1.
-     */
 
     showScreen(setupScreen);
 }
